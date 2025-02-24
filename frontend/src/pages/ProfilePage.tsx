@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import PersonalInfo from "../components/PersonalInfo";
@@ -8,33 +8,25 @@ import PermanentAddress from "../components/PermanentAddress";
 import ContactInfo from "../components/ContactInfo";
 import MedicalAndWork from "../components/MedicalAndWork";
 import DesignationDetails from "../components/DesignationDetails";
-
+import BankDetails from "../components/BankDetails";
 const ProfileForm: React.FC = () => {
   const { register, handleSubmit, watch, setValue } = useForm();
+  const [step, setStep] = useState(0);
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };
 
   const sections = [
-    <PersonalInfo register={register} watch={watch} setValue={setValue} />,
-    <FamilyDetails register={register} watch={watch} setValue={setValue} />,
-    <AddressDetails register={register}   setValue={setValue}/>,
-    <PermanentAddress register={register} watch={watch} setValue={setValue} />,
-    <ContactInfo register={register} watch={watch} setValue={setValue} />,
-    <MedicalAndWork register={register} watch={watch} setValue={setValue} />,
-    <DesignationDetails register={register}  watch={watch} setValue={setValue} />,
+    { label: "Personal Info", component: <PersonalInfo register={register} watch={watch} setValue={setValue} /> },
+    { label: "Family Details", component: <FamilyDetails register={register} watch={watch} setValue={setValue} /> },
+    { label: "Address Details", component: <AddressDetails register={register} setValue={setValue} /> },
+    { label: "Permanent Address", component: <PermanentAddress register={register} watch={watch} setValue={setValue} /> },
+    { label: "Contact Info", component: <ContactInfo register={register} watch={watch} setValue={setValue} /> },
+    { label: "Medical & Work", component: <MedicalAndWork register={register} watch={watch} setValue={setValue} /> },
+    { label: "Designation", component: <DesignationDetails register={register} watch={watch} setValue={setValue} /> },
+    { label: "Bank Details", component: <BankDetails register={register} watch={watch} setValue={setValue} /> },
   ];
-
-  const chunkSize = 5;
-  const columnCount = Math.ceil(sections.length / chunkSize);
-
-  const groupedSections = [];
-  for (let i = 0; i < sections.length; i += chunkSize) {
-    groupedSections.push(sections.slice(i, i + chunkSize));
-  }
-
-  const gridClass = `grid grid-cols-1 md:grid-cols-${Math.min(columnCount, 3)} gap-6`;
 
   return (
     <motion.form
@@ -42,28 +34,59 @@ const ProfileForm: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 border rounded-xl shadow-lg w-full max-w-screen-lg mx-auto bg-white"
+      className="p-8 border rounded-2xl shadow-2xl w-full max-w-6xl mx-auto bg-gradient-to-br from-white to-gray-100"
     >
-      <div className={gridClass}>
-        {groupedSections.map((column, colIndex) => (
-          <div key={colIndex} className="space-y-4">
-            {column.map((Component, index) => (
-              <div key={index}>{Component}</div>
-            ))}
-          </div>
+      <div className="flex space-x-4 mb-8">
+        {sections.map((section, index) => (
+          index % 2 === 0 && (
+            <button
+              key={index}
+              type="button"
+              onClick={() => setStep(index)}
+              className={`px-4 py-2 rounded-lg transition ${step === index ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}
+            >
+              {section.label}
+            </button>
+          )
         ))}
       </div>
 
-      <div className="flex justify-center mt-6">
-        <button
-          type="submit"
-          className="px-5 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
-        >
-          Submit
-        </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-white rounded-xl shadow-md">
+        {sections[step].component}
+        {sections[step + 1] && sections[step + 1].component}
+      </div>
+
+      <div className="flex justify-between mt-8">
+        {step > 0 && (
+          <button
+            type="button"
+            onClick={() => setStep(step - 2)}
+            className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+          >
+            Previous
+          </button>
+        )}
+
+        {step < sections.length - 2 ? (
+          <button
+            type="button"
+            onClick={() => setStep(step + 2)}
+            className="ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="ml-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          >
+            Submit
+          </button>
+        )}
       </div>
     </motion.form>
   );
 };
 
 export default ProfileForm;
+

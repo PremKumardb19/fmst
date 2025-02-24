@@ -1,26 +1,24 @@
 import React, { useEffect } from "react";
-import useBloodGroupStore from "../../store/useBloodGroupStore"; // Import the updated store
+import useBloodGroupStore from "../../store/useBloodGroupStore"; 
 
 const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = ({ register, setValue, watch }) => {
   const { bloodGroups, fetchBloodGroups, rehydrateState } = useBloodGroupStore();
 
   useEffect(() => {
-    rehydrateState(); // Ensure stored state is loaded first
+    rehydrateState(); 
   }, [rehydrateState]);
 
   useEffect(() => {
     if (bloodGroups.length === 0) {
-      fetchBloodGroups(); // Fetch if no data available
+      fetchBloodGroups(); 
     }
 
-    // Ensure stored value is set correctly
     const storedBloodGroup = localStorage.getItem("bloodGroup");
     if (storedBloodGroup) {
       setValue("bloodGroup", storedBloodGroup);
     }
   }, [fetchBloodGroups, bloodGroups.length, setValue]);
 
-  // Watch for changes and store in localStorage
   useEffect(() => {
     const subscription = watch((value: any) => {
       if (value.bloodGroup) {
@@ -28,7 +26,7 @@ const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = (
       }
     });
 
-    return () => subscription.unsubscribe(); // Cleanup
+    return () => subscription.unsubscribe(); 
   }, [watch]);
 
   return (
@@ -45,7 +43,7 @@ const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = (
             </option>
           ))
         ) : (
-          <option value="A+">A+</option> // Default if API fails
+          <option value="A+">A+</option> 
         )}
       </select>
     </div>

@@ -7,10 +7,14 @@ interface DropdownStore {
   maritalStatuses: { id: number; name: string }[];
   name: string;
   dob: string;
+  jdob: string; // Job Date of Birth
+  rdob: string; 
   fetchDropdowns: () => void;
   rehydrateState: () => void;
   setName: (name: string) => void;
   setDob: (dob: string) => void;
+  setJdob: (jdob: string) => void;
+  setRdob: (rdob: string) => void;
 }
 
 const useDropdownStore = create<DropdownStore>((set) => {
@@ -20,6 +24,8 @@ const useDropdownStore = create<DropdownStore>((set) => {
     const storedMaritalStatuses = localStorage.getItem("maritalStatuses");
     const storedName = localStorage.getItem("defaultName");
     const storedDob = localStorage.getItem("defaultDob");
+    const storedJDob = localStorage.getItem("defaultJDob");
+    const storedRdob = localStorage.getItem("defaultRdob");
 
     set({
       salutations: storedSalutations ? JSON.parse(storedSalutations) : [],
@@ -27,6 +33,9 @@ const useDropdownStore = create<DropdownStore>((set) => {
       maritalStatuses: storedMaritalStatuses ? JSON.parse(storedMaritalStatuses) : [],
       name: storedName || "",
       dob: storedDob || "",
+      jdob: storedJDob || "",
+      rdob: storedRdob || "",
+
     });
   };
 
@@ -36,6 +45,9 @@ const useDropdownStore = create<DropdownStore>((set) => {
     maritalStatuses: [],
     name: "",
     dob: "",
+    jdob: "",
+    rdob: "",
+  
     fetchDropdowns: async () => {
       try {
         const [salutationsRes, gendersRes, maritalStatusesRes] = await Promise.all([
@@ -68,10 +80,17 @@ const useDropdownStore = create<DropdownStore>((set) => {
       localStorage.setItem("defaultDob", dob);
       set({ dob });
     },
+    setJdob: (jdob: string) => {
+      localStorage.setItem("defaultJdob", jdob);
+      set({ jdob });
+    },
+    setRdob: (rdob: string) => {
+      localStorage.setItem("defaultRdob", rdob);
+      set({ rdob });
+    },
   };
 });
 
-// ** Call `rehydrateState()` immediately before component mounts **
 useDropdownStore.getState().rehydrateState();
 
 export default useDropdownStore;

@@ -27,12 +27,12 @@ const AuthPage = () => {
       
       if (response.ok) {
         if (isRegister) {
-          // If registration is successful, switch to login page
+
           setIsRegister(false);
           setFormData({ name: "", email: "", password: "" });
           alert("Registration successful! Please login.");
         } else {
-          // If login is successful, store the token and redirect to home
+
           localStorage.setItem("token", data.token);
           navigate("/home");
         }

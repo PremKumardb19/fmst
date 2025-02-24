@@ -13,35 +13,36 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
   const { religions, fetchReligions } = useReligionStore();
   const { community, fetchCommunity } = useCommunityStore();
 
-  // ✅ Load saved values from localStorage on mount
   useEffect(() => {
     const savedFatherName = localStorage.getItem("defaultFatherName") || "";
     const savedMotherName = localStorage.getItem("defaultMotherName") || "";
     const savedReligion = localStorage.getItem("defaultReligion") || "Hindu";
     const savedCommunity = localStorage.getItem("defaultCommunity") || "BC";
     const savedCaste = localStorage.getItem("defaultCaste") || "";
+    const savedAnniversary = localStorage.getItem("defaultAnniversary") || "";
+
 
     setValue("fatherName", savedFatherName);
     setValue("motherName", savedMotherName);
     setValue("religion", savedReligion);
     setValue("community", savedCommunity);
     setValue("caste", savedCaste);
+    setValue("anniversary", savedAnniversary);
   }, [setValue]);
 
-  // ✅ Fetch religion and community dropdown data on mount
   useEffect(() => {
     fetchReligions();
     fetchCommunity();
   }, []);
 
-  // ✅ Store selected values in localStorage
   useEffect(() => {
     if (watch("fatherName")) localStorage.setItem("defaultFatherName", watch("fatherName"));
     if (watch("motherName")) localStorage.setItem("defaultMotherName", watch("motherName"));
     if (watch("religion")) localStorage.setItem("defaultReligion", watch("religion"));
     if (watch("community")) localStorage.setItem("defaultCommunity", watch("community"));
     if (watch("caste")) localStorage.setItem("defaultCaste", watch("caste"));
-  }, [watch("fatherName"), watch("motherName"), watch("religion"), watch("community"), watch("caste")]);
+    if (watch("anniversary")) localStorage.setItem("defaultAnniversary", watch("anniversary"));
+  }, [watch("fatherName"), watch("motherName"), watch("religion"), watch("community"), watch("caste"), watch("anniversary")]);
 
   return (
     <div className="space-y-4">
@@ -71,6 +72,9 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
 
       <label className="block text-lg font-semibold">Caste</label>
       <input {...register("caste")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+
+      <label className="block text-lg font-semibold">Anniversary Date</label>
+      <input type="date" {...register("anniversary")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
     </div>
   );
 };

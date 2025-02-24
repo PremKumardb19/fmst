@@ -20,7 +20,6 @@ const useCommunityStore = create<CommunityStore>((set) => {
         const response = await axios.get("http://localhost:5000/api/community");
         const community = response.data || [];
 
-        // ✅ Fixed: Store fetched data in localStorage under the correct key
         localStorage.setItem("community", JSON.stringify(community));
         set({ community });
       } catch (error) {
@@ -31,7 +30,6 @@ const useCommunityStore = create<CommunityStore>((set) => {
   };
 });
 
-// ** Call `rehydrateState()` before first render **
 useCommunityStore.getState().rehydrateState();
 
 export default useCommunityStore;

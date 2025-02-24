@@ -8,7 +8,6 @@ interface ReligionStore {
 }
 
 const useReligionStore = create<ReligionStore>((set) => {
-  // ✅ Rehydrate state from localStorage before rendering
   const rehydrateState = () => {
     const storedReligions = localStorage.getItem("religions");
     set({ religions: storedReligions ? JSON.parse(storedReligions) : [] });
@@ -21,7 +20,6 @@ const useReligionStore = create<ReligionStore>((set) => {
         const response = await axios.get("http://localhost:5000/api/religion");
         const religions = response.data || [];
 
-        // ✅ Store in Zustand and localStorage
         localStorage.setItem("religions", JSON.stringify(religions));
         set({ religions });
       } catch (error) {
@@ -32,7 +30,6 @@ const useReligionStore = create<ReligionStore>((set) => {
   };
 });
 
-// ** Call `rehydrateState()` before first render **
 useReligionStore.getState().rehydrateState();
 
 export default useReligionStore;

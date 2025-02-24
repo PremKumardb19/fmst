@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import { useAddressStore } from "../../store/addressStore"; // For current address
-import { usePermanentAddressStore } from "../../store/permanentAddress"; // Separate store for permanent address
+import { useAddressStore } from "../../store/addressStore"; 
+import { usePermanentAddressStore } from "../../store/permanentAddress"; 
 
 const PermanentAddress: React.FC<{ register: any; watch: any; setValue: any }> = ({ register, watch, setValue }) => {
   const [sameAsCurrent, setSameAsCurrent] = useState(() => {
@@ -31,7 +31,6 @@ const PermanentAddress: React.FC<{ register: any; watch: any; setValue: any }> =
 
   const currentAddress = watch("currentAddress");
 
-  // Load data from localStorage when component mounts
   useEffect(() => {
     fetchStates();
 

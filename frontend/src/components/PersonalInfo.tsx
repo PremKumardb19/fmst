@@ -19,12 +19,16 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     const savedMaritalStatus = localStorage.getItem("defaultMaritalStatus") || "Single";
     const savedName = localStorage.getItem("defaultName") || "";
     const savedDob = localStorage.getItem("defaultDob") || "";
+    const savedJDob = localStorage.getItem("defaultJDob") || "";
+    const savedRDob = localStorage.getItem("defaultRDob") || "";
 
+    setValue("rdob", savedRDob);
     setValue("salutation", savedSalutation);
     setValue("gender", savedGender);
     setValue("maritalStatus", savedMaritalStatus);
     setValue("name", savedName);
     setValue("dob", savedDob);
+    setValue("jdob", savedJDob);
   }, [setValue]);
 
   useEffect(() => {
@@ -37,7 +41,9 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     if (watch("maritalStatus")) localStorage.setItem("defaultMaritalStatus", watch("maritalStatus"));
     if (watch("name")) localStorage.setItem("defaultName", watch("name"));
     if (watch("dob")) localStorage.setItem("defaultDob", watch("dob"));
-  }, [watch("salutation"), watch("gender"), watch("maritalStatus"), watch("name"), watch("dob")]);
+    if (watch("jdob")) localStorage.setItem("defaultJDob", watch("jdob"));
+    if (watch("rdob")) localStorage.setItem("defaultRDob", watch("rdob"));
+  }, [watch("salutation"), watch("gender"), watch("maritalStatus"), watch("name"), watch("dob"), watch("jdob"), watch("rdob")]);
 
   useEffect(() => {
     const subscription = watch((data: any) => {
@@ -59,21 +65,30 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
 
   return (
     <div className="space-y-4">
-      <label className="block text-lg font-semibold">Salutation</label>
-      <select {...register("salutation")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
-        {salutations.map((salutation) => (
-          <option key={salutation.id} value={salutation.name}>
-            {salutation.name}
-          </option>
-        ))}
-      </select>
+      <div className="flex space-x-4">
+        <div className="flex-1">
+          <label className="block text-lg font-semibold mb-4">Salutation</label>
+          <select
+            {...register("salutation")}
+            className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {salutations.map((salutation) => (
+               <option key={salutation.id} value={salutation.name}>
+               {salutation.name}
+             </option>
+            ))}
+          </select>
+        </div>
 
-      <label className="block text-lg font-semibold">Name</label>
-      <input
-        {...register("name")}
-        style={{ textTransform: "uppercase" }}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-      />
+        <div className="flex-1">
+          <label className="block text-lg font-semibold mb-4">Name</label>
+          <input
+            {...register("name")}
+            style={{ textTransform: "uppercase" }}
+            className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
 
       <label className="block text-lg font-semibold">Gender</label>
       <select {...register("gender")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
@@ -95,6 +110,12 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
 
       <label className="block text-lg font-semibold">Date of Birth</label>
       <input type="date" {...register("dob")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+
+      <label className="block text-lg font-semibold">Date of Joining</label>
+      <input type="date" {...register("jdob")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+
+      <label className="block text-lg font-semibold">Date of Retirement</label>
+      <input type="date" {...register("rdob")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
     </div>
   );
 };

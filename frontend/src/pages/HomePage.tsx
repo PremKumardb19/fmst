@@ -67,9 +67,7 @@ const HomePage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md flex flex-col">
-        {/* User Profile Section */}
         <div className="p-6 border-b">
           <div className="flex items-center space-x-3">
             <FaUserCircle className="text-5xl text-gray-600" />
@@ -80,7 +78,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Navigation Items */}
         <nav className="flex-1 p-4">
           <div className="space-y-2">
             {navItems.map((item) => (
@@ -100,7 +97,6 @@ const HomePage = () => {
           </div>
         </nav>
 
-        {/* Logout Button */}
         <div className="p-4 border-t">
           <button
             onClick={handleLogout}
@@ -111,16 +107,13 @@ const HomePage = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1">
-        {/* Top Navigation Bar */}
         <header className="bg-white shadow-md p-4">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-semibold text-gray-800">Welcome, User!</h1>
           </div>
         </header>
 
-        {/* Main Content Area */}
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           {renderComponent()}
         </main>

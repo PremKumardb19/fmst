@@ -49,8 +49,8 @@ const AddressDetails: React.FC<AddressDetailsProps> = ({ register, setValue }) =
   }, [setValue, selectedCountry]);
 
   return (
-    <div className="space-y-4">
-      <label className="block text-lg font-semibold">Current Address</label>
+    <div className="space-y-4 mt-11">
+      <label className="block text-lg font-semibold ">Current Address</label>
       <textarea
         {...register("currentAddress")}
         value={currentAddress}

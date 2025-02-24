@@ -102,6 +102,23 @@ const getCommunity = async (req, res, db) => {
   }
 };
 
+const getAccountTypes = async (req, res, db) => {
+  try {
+    const [result] = await db.execute("SELECT * FROM account_type ORDER BY id");
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getEmploymentType = async (req, res, db) => {
+  try {
+    const [result] = await db.execute("SELECT * FROM employment_type ORDER BY id");
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = { 
   getSalutations, 
@@ -113,5 +130,7 @@ module.exports = {
   getStates, 
   getDistricts, 
   getTaluks,
- getCommunity 
+ getCommunity,
+ getAccountTypes,
+ getEmploymentType
 };
