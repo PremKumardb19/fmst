@@ -10,6 +10,10 @@ import MedicalAndWork from "../components/MedicalAndWork";
 import DesignationDetails from "../components/DesignationDetails";
 import BankDetails from "../components/BankDetails";
 const ProfileForm: React.FC = () => {
+   const [sameAsCurrent, setSameAsCurrent] = useState(() => {
+      return JSON.parse(localStorage.getItem("sameAsCurrent") || "false");
+    });
+  
   const { register, handleSubmit, watch, setValue } = useForm();
   const [step, setStep] = useState(0);
 
@@ -20,8 +24,8 @@ const ProfileForm: React.FC = () => {
   const sections = [
     { label: "Personal Info", component: <PersonalInfo register={register} watch={watch} setValue={setValue} /> },
     { label: "Family Details", component: <FamilyDetails register={register} watch={watch} setValue={setValue} /> },
-    { label: "Address Details", component: <AddressDetails register={register} setValue={setValue} /> },
-    { label: "Permanent Address", component: <PermanentAddress register={register} watch={watch} setValue={setValue} /> },
+    { label: "Address Details", component: <AddressDetails  sameAsCurrent={sameAsCurrent} setSameAsCurrent={setSameAsCurrent} register={register} setValue={setValue} /> },
+    { label: "Permanent Address", component: <PermanentAddress sameAsCurrent={sameAsCurrent} setSameAsCurrent={setSameAsCurrent} register={register} watch={watch} setValue={setValue} /> },
     { label: "Contact Info", component: <ContactInfo register={register} watch={watch} setValue={setValue} /> },
     { label: "Medical & Work", component: <MedicalAndWork register={register} watch={watch} setValue={setValue} /> },
     { label: "Designation", component: <DesignationDetails register={register} watch={watch} setValue={setValue} /> },
@@ -89,4 +93,3 @@ const ProfileForm: React.FC = () => {
 };
 
 export default ProfileForm;
-

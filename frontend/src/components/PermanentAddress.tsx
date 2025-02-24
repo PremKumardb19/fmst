@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
-import { useAddressStore } from "../../store/addressStore"; 
-import { usePermanentAddressStore } from "../../store/permanentAddress"; 
+import { useAddressStore } from "../../store/addressStore"; // For current address
+import { usePermanentAddressStore } from "../../store/permanentAddress"; // Separate store for permanent address
 
-const PermanentAddress: React.FC<{ register: any; watch: any; setValue: any }> = ({ register, watch, setValue }) => {
-  const [sameAsCurrent, setSameAsCurrent] = useState(() => {
-    return JSON.parse(localStorage.getItem("sameAsCurrent") || "false");
-  });
+const PermanentAddress: React.FC<{ sameAsCurrent:any,setSameAsCurrent:any,register: any; watch: any; setValue: any }> = ({ sameAsCurrent,register, watch, setValue }) => {
+  
 
   const {
     selectedState: currentState,
@@ -31,6 +29,7 @@ const PermanentAddress: React.FC<{ register: any; watch: any; setValue: any }> =
 
   const currentAddress = watch("currentAddress");
 
+  // Load data from localStorage when component mounts
   useEffect(() => {
     fetchStates();
 
@@ -98,19 +97,7 @@ const PermanentAddress: React.FC<{ register: any; watch: any; setValue: any }> =
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="sameAsCurrent"
-          checked={sameAsCurrent}
-          onChange={() => setSameAsCurrent(!sameAsCurrent)}
-          className="w-5 h-5"
-        />
-        <label htmlFor="sameAsCurrent" className="text-lg font-semibold">
-          Same as Current Address
-        </label>
-      </div>
-
+      
       <label className="block text-lg font-semibold">Permanent Address</label>
       <textarea
         {...register("permanentAddress")}

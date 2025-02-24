@@ -5,10 +5,12 @@ import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface AddressDetailsProps {
   register: UseFormRegister<any>;
+  sameAsCurrent:any,
+  setSameAsCurrent:any,
   setValue: UseFormSetValue<any>;
 }
 
-const AddressDetails: React.FC<AddressDetailsProps> = ({ register, setValue }) => {
+const AddressDetails: React.FC<AddressDetailsProps> = ({ register, sameAsCurrent,setSameAsCurrent,setValue }) => {
   const {
     states,
     districts,
@@ -49,8 +51,8 @@ const AddressDetails: React.FC<AddressDetailsProps> = ({ register, setValue }) =
   }, [setValue, selectedCountry]);
 
   return (
-    <div className="space-y-4 mt-11">
-      <label className="block text-lg font-semibold ">Current Address</label>
+    <div className="space-y-4">
+      <label className="block text-lg font-semibold">Current Address</label>
       <textarea
         {...register("currentAddress")}
         value={currentAddress}
@@ -96,6 +98,22 @@ const AddressDetails: React.FC<AddressDetailsProps> = ({ register, setValue }) =
         isDisabled={!selectedDistrict}
         isClearable
       />
+
+      
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="sameAsCurrent"
+          checked={sameAsCurrent}
+          onChange={() => setSameAsCurrent(!sameAsCurrent)}
+          className="w-5 h-5"
+        />
+        <label htmlFor="sameAsCurrent" className="text-lg font-semibold">
+          Same as Current Address
+        </label>
+      </div>
+
+      
     </div>
   );
 };
