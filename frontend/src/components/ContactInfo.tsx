@@ -1,32 +1,33 @@
 import React, { useEffect } from "react";
+import { useContactStore } from "../../store/contactStore";
 
 const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ register, setValue, watch }) => {
-  useEffect(() => {
-    const storedOfficialMobile = localStorage.getItem("officialmobile");
-    const storedOfficialEmail = localStorage.getItem("officialemail");
-    const storedPersonalEmail = localStorage.getItem("personalemail");
-    const storedPersonalMobile = localStorage.getItem("personalmobile");
-
-    if (storedPersonalMobile) setValue("personalmobile", storedPersonalMobile);
-    if (storedPersonalEmail) setValue("personalemail", storedPersonalEmail);
-    if (storedOfficialMobile) setValue("officialmobile", storedOfficialMobile);
-    if (storedOfficialEmail) setValue("officialemail", storedOfficialEmail);
-  }, [setValue]);
+  const { officialMobile, officialEmail, personalMobile, personalEmail, setContactInfo } = useContactStore();
 
   useEffect(() => {
-    const subscription = watch((value:any) => {
-      localStorage.setItem("officialmobile", value.mobile || "");
-      localStorage.setItem("officialemail", value.email || "");
-      localStorage.setItem("personalemail", value.Persemail || "");
-      localStorage.setItem("personalmobile", value.Persmobile || "");
+    // Set default values from Zustand store
+    setValue("mobile", officialMobile);
+    setValue("email", officialEmail);
+    setValue("Persmobile", personalMobile);
+    setValue("Persemail", personalEmail);
+  }, [officialMobile, officialEmail, personalMobile, personalEmail, setValue]);
+
+  useEffect(() => {
+    const subscription = watch((value: any) => {
+      setContactInfo({
+        officialMobile: value.mobile,
+        officialEmail: value.email,
+        personalMobile: value.Persmobile,
+        personalEmail: value.Persemail,
+      });
     });
 
-    return () => subscription.unsubscribe(); // Cleanup subscription
-  }, [watch]);
+    return () => subscription.unsubscribe(); 
+  }, [watch, setContactInfo]);
 
   return (
     <div className="space-y-4">
-      <label className="block text-lg font-semibold"> Official Mobile Number</label>
+      <label className="block text-lg font-semibold">Official Mobile Number</label>
       <input
         type="tel"
         {...register("mobile")}
@@ -40,7 +41,7 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
         className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
       />
 
-      <label className="block text-lg font-semibold"> Personal Mobile Number</label>
+      <label className="block text-lg font-semibold">Personal Mobile Number</label>
       <input
         type="tel"
         {...register("Persmobile")}
