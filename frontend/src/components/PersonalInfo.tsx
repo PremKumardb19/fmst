@@ -110,7 +110,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
           <input
             {...register("name")}
             style={{ textTransform: "uppercase" }}
+            placeholder="Enter full name"
             className="border p-2 text-sm rounded w-full focus:ring-2 focus:ring-blue-400"
+            onFocus={(e) => (e.target.style.textTransform = "uppercase")}
+            onBlur={(e) => (e.target.style.textTransform = "none")}
           />
         </div>
       </div>

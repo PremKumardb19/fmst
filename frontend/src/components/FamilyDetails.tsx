@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import useReligionStore from "../../store/useReligionStore";
 import useCommunityStore from "../../store/useCommunityStore";
-import { UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { useForm, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import ContactInfo from "./ContactInfo";
 
 interface FamilyDetailsProps {
@@ -11,6 +11,7 @@ interface FamilyDetailsProps {
 }
 
 const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue }) => {
+  const {  formState: { errors } } = useForm();
   const { religions, fetchReligions } = useReligionStore();
   const { community, fetchCommunity } = useCommunityStore();
 
@@ -59,6 +60,10 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
           <label className="block text-base font-medium mb-1">Father's Name</label>
           <input
             {...register("fatherName")}
+            style={{ textTransform: "uppercase" }}
+            onFocus={(e) => (e.target.style.textTransform = "uppercase")}
+            onBlur={(e) => (e.target.style.textTransform = "none")}
+            placeholder="Enter Father name"
             className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
           />
         </div>
@@ -66,6 +71,10 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
           <label className="block text-base font-medium mb-1">Mother's Name</label>
           <input
             {...register("motherName")}
+            style={{ textTransform: "uppercase" }}
+            onFocus={(e) => (e.target.style.textTransform = "uppercase")}
+            onBlur={(e) => (e.target.style.textTransform = "none")}
+            placeholder="Enter Mother name"
             className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
           />
         </div>
@@ -107,6 +116,10 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
           <label className="block text-base font-medium mb-1">Caste</label>
           <input
             {...register("caste")}
+            style={{ textTransform: "uppercase" }}
+            onFocus={(e) => (e.target.style.textTransform = "uppercase")}
+            onBlur={(e) => (e.target.style.textTransform = "none")}
+            placeholder="Enter Caste"
             className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
           />
         </div>
@@ -122,8 +135,7 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
 
       </div>
       <div>
-        <ContactInfo register={register} watch={watch} setValue={setValue} />
-
+      <ContactInfo register={register} watch={watch} setValue={setValue} errors={errors} />
       </div>
     </div>
   );
