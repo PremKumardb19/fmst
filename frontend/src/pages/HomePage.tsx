@@ -12,8 +12,10 @@ import {
   X
 } from "lucide-react";
 import ProfileForm from "./ProfilePage";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const HomePage = () => {
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,6 +42,7 @@ const HomePage = () => {
   ];
 
   const renderComponent = () => {
+
     switch (activeComponent) {
       case 'profile':
         return <ProfileForm />;
@@ -95,7 +98,6 @@ const HomePage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="lg:hidden fixed top-4 right-4 z-50 p-2 rounded-lg bg-white shadow-md text-gray-600 hover:bg-gray-50"
@@ -103,7 +105,6 @@ const HomePage = () => {
         {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Sidebar */}
       <aside className={`
         fixed lg:static w-64 bg-white shadow-lg min-h-screen z-40 transition-transform duration-300
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -115,8 +116,8 @@ const HomePage = () => {
                 <UserCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-800">User Name</h2>
-                <p className="text-sm text-gray-500">user@example.com</p>
+                <h2 className="text-lg font-bold text-gray-800">{user?.name}</h2>
+                <p className="text-sm text-gray-500">{user?.email}</p>
               </div>
             </div>
           </div>
@@ -159,7 +160,7 @@ const HomePage = () => {
       <div className="flex-1">
         <header className="bg-white shadow-sm p-4 lg:p-6">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800">Welcome, User!</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Welcome, {user?.name}</h1>
           </div>
         </header>
 

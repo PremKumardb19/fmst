@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserCircle, Mail, Lock, ArrowRight } from "lucide-react";
+import { useAuthStore } from "../../store/useAuthStore"; // Import Zustand store
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useAuthStore(); // Access Zustand store
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
 
@@ -25,14 +27,16 @@ const AuthPage = () => {
       });
 
       const data = await response.json();
-      
+      console.log(data)
       if (response.ok) {
         if (isRegister) {
           setIsRegister(false);
           setFormData({ name: "", email: "", password: "" });
           alert("Registration successful! Please login.");
         } else {
+          setUser({ id: data.user.id, email: data.user.email,name:data.user.name });
           localStorage.setItem("token", data.token);
+
           navigate("/home");
         }
       } else {
@@ -48,7 +52,6 @@ const AuthPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Header */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-6">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner">
@@ -65,7 +68,6 @@ const AuthPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {isRegister && (
@@ -76,6 +78,7 @@ const AuthPage = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    style={{ textTransform: "uppercase" }}
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
                     placeholder="Full Name"
                     required
