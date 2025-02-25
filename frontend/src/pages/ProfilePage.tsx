@@ -5,14 +5,13 @@ import PersonalInfo from "../components/PersonalInfo";
 import FamilyDetails from "../components/FamilyDetails";
 import AddressDetails from "../components/AddressDetails";
 import PermanentAddress from "../components/PermanentAddress";
-import ContactInfo from "../components/ContactInfo";
-import DesignationDetails from "../components/DesignationDetails";
 import BankDetails from "../components/BankDetails";
 
 const ProfileForm: React.FC = () => {
   const [sameAsCurrent, setSameAsCurrent] = useState(() => {
     return JSON.parse(localStorage.getItem("sameAsCurrent") || "false");
   });
+
   const { register, handleSubmit, watch, setValue } = useForm();
   const [step, setStep] = useState(0);
 
@@ -23,69 +22,29 @@ const ProfileForm: React.FC = () => {
   const sections = [
     {
       label: "Personal Info",
-      component: (
-        <PersonalInfo register={register} watch={watch} setValue={setValue} />
-      ),
+      component: <PersonalInfo register={register} watch={watch} setValue={setValue} />,
     },
     {
       label: "Family Details",
-      component: (
-        <FamilyDetails register={register} watch={watch} setValue={setValue} />
-      ),
+      component: <FamilyDetails register={register} watch={watch} setValue={setValue} />,
     },
     {
       label: "Address Details",
       component: (
-        <AddressDetails
-          sameAsCurrent={sameAsCurrent}
-          setSameAsCurrent={setSameAsCurrent}
-          register={register}
-          setValue={setValue}
-        />
+        <AddressDetails sameAsCurrent={sameAsCurrent} setSameAsCurrent={setSameAsCurrent} register={register} setValue={setValue} />
       ),
     },
     {
       label: "Permanent Address",
-      component: (
-        <PermanentAddress
-          sameAsCurrent={sameAsCurrent}
-          register={register}
-          watch={watch}
-          setValue={setValue}
-        />
-      ),
-    },
-    {
-      label: "Contact Info",
-      component: (
-        <ContactInfo register={register} watch={watch} setValue={setValue} />
-      ),
-    },
-    {
-      label: "Medical & Work",
-      // component: (
-      //   <MedicalAndWork register={register} watch={watch} setValue={setValue} />
-      // ),
-    },
-    {
-      label: "Designation",
-      component: (
-        <DesignationDetails register={register} watch={watch} setValue={setValue} />
-      ),
+      component: <PermanentAddress sameAsCurrent={sameAsCurrent} register={register} watch={watch} setValue={setValue} />,
     },
     {
       label: "Bank Details",
-      component: (
-        <BankDetails register={register} watch={watch} setValue={setValue} />
-      ),
+      component: <BankDetails register={register} watch={watch} setValue={setValue} />,
     },
   ];
-
-  // Calculate progress (since we show 2 sections per step)
-  const progressPercentage = Math.min(
-    ((step + 2) / sections.length) * 100,
-    100
-  );
+  
+  const progressPercentage = Math.min(((step + 2) / sections.length) * 100, 100);
 
   return (
     <motion.form
@@ -93,21 +52,19 @@ const ProfileForm: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full p-6 bg-white rounded-lg shadow-xl"
+      className="w-full p-10 bg-white rounded-xl shadow-xl"
     >
       {/* Navigation & Progress Bar */}
-      <div className="mb-6">
-        <div className="flex flex-wrap justify-center gap-4 mb-3">
+      <div className="mb-8">
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
           {sections.map((section, index) =>
             index % 2 === 0 ? (
               <button
                 key={index}
                 type="button"
                 onClick={() => setStep(index)}
-                className={`py-2 px-5 rounded-full text-sm transition ${
-                  step === index
-                    ? "bg-indigo-600 text-white shadow-md"
-                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                className={`py-2 px-6 text-sm font-medium transition rounded-lg shadow-md ${
+                  step === index ? "bg-indigo-600 text-white shadow-lg" : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                 }`}
               >
                 {section.label}
@@ -115,46 +72,46 @@ const ProfileForm: React.FC = () => {
             ) : null
           )}
         </div>
-        <div className="w-full bg-gray-300 rounded-full h-2">
-          <div
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <motion.div
             className="bg-indigo-600 h-2 rounded-full"
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
+            initial={{ width: "0%" }}
+            animate={{ width: `${progressPercentage}%` }}
+            transition={{ duration: 0.3 }}
+          ></motion.div>
         </div>
       </div>
 
       {/* Form Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 rounded-lg">
+      <div className={`p-6 bg-gray-50 rounded-lg ${step === sections.length - 1 ? "flex justify-center" : "grid grid-cols-1 md:grid-cols-2 gap-8"}`}>
         {sections[step].component}
         {sections[step + 1] && sections[step + 1].component}
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between mt-10">
         {step > 0 ? (
           <button
             type="button"
             onClick={() => setStep(step - 2)}
-            className="py-2 px-6 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+            className="py-3 px-8 text-white rounded-lg shadow-lg transition bg-gray-500 hover:bg-gray-600"
           >
             Previous
           </button>
         ) : (
           <div />
         )}
+
         {step < sections.length - 2 ? (
           <button
             type="button"
             onClick={() => setStep(step + 2)}
-            className="py-2 px-6 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition ml-auto"
+            className="py-3 px-8 text-white rounded-lg shadow-lg transition bg-indigo-600 hover:bg-indigo-700 ml-auto"
           >
             Next
           </button>
         ) : (
-          <button
-            type="submit"
-            className="py-2 px-6 bg-green-600 text-white rounded-lg hover:bg-green-700 transition ml-auto"
-          >
+          <button type="submit" className="py-3 px-8 text-white rounded-lg shadow-lg transition bg-green-600 hover:bg-green-700 ml-auto">
             Submit
           </button>
         )}

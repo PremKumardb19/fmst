@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import useReligionStore from "../../store/useReligionStore";
 import useCommunityStore from "../../store/useCommunityStore";
 import { UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import ContactInfo from "./ContactInfo";
 
 interface FamilyDetailsProps {
   register: UseFormRegister<any>;
@@ -110,14 +111,19 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
           />
         </div>
         <div>
-    <label className="block text-base font-medium mb-1">Date of Anniversary</label>
-    <input
-      type="date"
-      {...register("anniversaryDate")}
-      disabled={watch("maritalStatus") === "Single"}
-      className="border p-2 text-sm rounded w-full focus:ring-2 focus:ring-blue-400 disabled:bg-gray-200"
-    />
-  </div>
+          <label className="block text-base font-medium mb-1">Date of Anniversary</label>
+          <input
+            type="date"
+            {...register("anniversaryDate")}
+            disabled={watch("maritalStatus") === "Single"}
+            className="border p-2 text-sm rounded w-full focus:ring-2 focus:ring-blue-400 disabled:bg-gray-200"
+          />
+        </div>
+
+      </div>
+      <div>
+        <ContactInfo register={register} watch={watch} setValue={setValue} />
+
       </div>
     </div>
   );

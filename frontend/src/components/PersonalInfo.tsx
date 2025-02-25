@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useDropdownStore from "../../store/useDropdownStore";
 import useBloodGroupStore from "../../store/useBloodGroupStore";
 import { UseFormRegister, UseFormWatch, UseFormSetValue } from "react-hook-form";
+import DesignationDetails from "./DesignationDetails";
 
 interface PersonalInfoProps {
   register: UseFormRegister<any>;
@@ -15,7 +16,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
   const [filteredGenders, setFilteredGenders] = useState<{ id: number; name: string }[]>([]);
   const [selectedSalutation, setSelectedSalutation] = useState<string>(watch("salutation") || "");
 
-  // Set default personal info values from localStorage
   useEffect(() => {
     const savedSalutation = localStorage.getItem("defaultSalutation") || "Dr.";
     const savedGender = localStorage.getItem("defaultGender") || "Male";
@@ -34,12 +34,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     setValue("rdob", savedRDob);
   }, [setValue]);
 
-  // Fetch dropdown data
   useEffect(() => {
     fetchDropdowns();
   }, [fetchDropdowns]);
 
-  // Save changes to localStorage for personal info
   useEffect(() => {
     if (watch("salutation")) localStorage.setItem("defaultSalutation", watch("salutation"));
     if (watch("gender")) localStorage.setItem("defaultGender", watch("gender"));
@@ -50,7 +48,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     if (watch("rdob")) localStorage.setItem("defaultRDob", watch("rdob"));
   }, [watch("salutation"), watch("gender"), watch("maritalStatus"), watch("name"), watch("dob"), watch("jdob"), watch("rdob")]);
 
-  // Update salutation-dependent genders
   useEffect(() => {
     const subscription = watch((data: any) => {
       setSelectedSalutation(data.salutation);
@@ -69,7 +66,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     }
   }, [selectedSalutation, genders]);
 
-  // --- Blood Group Logic ---
   useEffect(() => {
     rehydrateState();
   }, [rehydrateState]);
@@ -92,11 +88,9 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
     });
     return () => subscription.unsubscribe();
   }, [watch]);
-  // --- End Blood Group Logic ---
 
   return (
     <div className="space-y-6">
-      {/* Salutation and Name */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
         <div>
           <label className="block text-base font-medium mb-1">Salutation</label>
@@ -121,8 +115,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
         </div>
       </div>
 
-      {/* Gender and Marital Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-base font-medium mb-1">Gender</label>
           <select
@@ -149,9 +142,25 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
             ))}
           </select>
         </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Blood Group</label>
+          <select
+            {...register("bloodGroup")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {bloodGroups.length > 0 ? (
+              bloodGroups.map((group) => (
+                <option key={group.id} value={group.name}>
+                  {group.name}
+                </option>
+              ))
+            ) : (
+              <option value="A+">A+</option>
+            )}
+          </select>
+        </div>
       </div>
 
-      {/* Dates */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-base font-medium mb-1">Date of Birth</label>
@@ -178,25 +187,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ register, watch, setValue }
           />
         </div>
       </div>
-
-      {/* Blood Group */}
       <div>
-        <label className="block text-base font-medium mb-1">Blood Group</label>
-        <select
-          {...register("bloodGroup")}
-          className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        >
-          {bloodGroups.length > 0 ? (
-            bloodGroups.map((group) => (
-              <option key={group.id} value={group.name}>
-                {group.name}
-              </option>
-            ))
-          ) : (
-            <option value="A+">A+</option>
-          )}
-        </select>
+        <DesignationDetails register={register} watch={watch} setValue={setValue} />
       </div>
+
     </div>
   );
 };

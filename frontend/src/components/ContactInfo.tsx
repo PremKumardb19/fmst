@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { useContactStore } from "../../store/contactStore";
 
 const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ register, setValue, watch }) => {
-  const { officialMobile, officialEmail, personalMobile, personalEmail, setContactInfo } = useContactStore();
+  const { officialMobile, officialEmail, personalMobile, personalEmail, emergencyEmail, emergencyMobile, setContactInfo } = useContactStore();
 
   useEffect(() => {
-    // Set default values from Zustand store
     setValue("mobile", officialMobile);
     setValue("email", officialEmail);
     setValue("Persmobile", personalMobile);
     setValue("Persemail", personalEmail);
-  }, [officialMobile, officialEmail, personalMobile, personalEmail, setValue]);
+    setValue("emergencyEmail", emergencyEmail);
+    setValue("emergencyMobile", emergencyMobile);
+  }, [officialMobile, officialEmail, personalMobile, personalEmail, emergencyEmail, emergencyEmail, setValue]);
 
   useEffect(() => {
     const subscription = watch((value: any) => {
@@ -19,6 +20,8 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
         officialEmail: value.email,
         personalMobile: value.Persmobile,
         personalEmail: value.Persemail,
+        emergencyEmail: value.emergencyEmail,
+        emergencyMobile: value.emergencyMobile,
       });
     });
     return () => subscription.unsubscribe();
@@ -26,7 +29,6 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
 
   return (
     <div className="space-y-6">
-      {/* Official Contact Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-base font-medium mb-1">Official Mobile Number</label>
@@ -46,7 +48,6 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
         </div>
       </div>
 
-      {/* Personal Contact Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-base font-medium mb-1">Personal Mobile Number</label>
@@ -64,6 +65,25 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
             className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
           />
         </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Emergency Mobile Number</label>
+          <input
+            type="tel"
+            {...register("emergencyMobile")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Emergency Email ID</label>
+          <input
+            type="email"
+            {...register("emergencyEmail")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
       </div>
     </div>
   );

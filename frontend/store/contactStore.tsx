@@ -6,6 +6,8 @@ interface ContactState {
   officialEmail: string;
   personalMobile: string;
   personalEmail: string;
+  emergencyMobile: string;
+  emergencyEmail: string;
   setContactInfo: (info: Partial<ContactState>) => void;
 }
 
@@ -16,10 +18,12 @@ export const useContactStore = create<ContactState>()(
       officialEmail: "",
       personalMobile: "",
       personalEmail: "",
+      emergencyMobile: "",
+      emergencyEmail: "",
       setContactInfo: (info) => set((state) => ({ ...state, ...info })),
     }),
     {
-      name: "contact-storage", // Local Storage key
+      name: "contact-storage", 
     }
   )
 );
