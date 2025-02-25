@@ -47,13 +47,14 @@ const ProfileForm: React.FC = () => {
   const progressPercentage = Math.min(((step + 2) / sections.length) * 100, 100);
 
   return (
-    <motion.form
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full p-10 bg-white rounded-xl shadow-xl"
-    >
+<motion.form
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  onSubmit={handleSubmit(onSubmit)}
+  className="w-full min-h-[90vh] flex flex-col justify-between p-10 bg-white rounded-xl shadow-xl"
+>
+
       {/* Navigation & Progress Bar */}
       <div className="mb-8">
         <div className="flex flex-wrap justify-center gap-4 mb-4">
