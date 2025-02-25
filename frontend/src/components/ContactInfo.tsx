@@ -21,39 +21,50 @@ const ContactInfo: React.FC<{ register: any; setValue: any; watch: any }> = ({ r
         personalEmail: value.Persemail,
       });
     });
-
-    return () => subscription.unsubscribe(); 
+    return () => subscription.unsubscribe();
   }, [watch, setContactInfo]);
 
   return (
-    <div className="space-y-4">
-      <label className="block text-lg font-semibold">Official Mobile Number</label>
-      <input
-        type="tel"
-        {...register("mobile")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-      />
+    <div className="space-y-6">
+      {/* Official Contact Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Official Mobile Number</label>
+          <input
+            type="tel"
+            {...register("mobile")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Official Email ID</label>
+          <input
+            type="email"
+            {...register("email")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">Official Email ID</label>
-      <input
-        type="email"
-        {...register("email")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-      />
-
-      <label className="block text-lg font-semibold">Personal Mobile Number</label>
-      <input
-        type="tel"
-        {...register("Persmobile")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-      />
-
-      <label className="block text-lg font-semibold">Personal Email ID</label>
-      <input
-        type="email"
-        {...register("Persemail")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-      />
+      {/* Personal Contact Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Personal Mobile Number</label>
+          <input
+            type="tel"
+            {...register("Persmobile")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Personal Email ID</label>
+          <input
+            type="email"
+            {...register("Persemail")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
     </div>
   );
 };

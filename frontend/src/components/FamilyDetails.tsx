@@ -21,7 +21,6 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
     const savedCaste = localStorage.getItem("defaultCaste") || "";
     const savedAnniversary = localStorage.getItem("defaultAnniversary") || "";
 
-
     setValue("fatherName", savedFatherName);
     setValue("motherName", savedMotherName);
     setValue("religion", savedReligion);
@@ -42,39 +41,84 @@ const FamilyDetails: React.FC<FamilyDetailsProps> = ({ register, watch, setValue
     if (watch("community")) localStorage.setItem("defaultCommunity", watch("community"));
     if (watch("caste")) localStorage.setItem("defaultCaste", watch("caste"));
     if (watch("anniversary")) localStorage.setItem("defaultAnniversary", watch("anniversary"));
-  }, [watch("fatherName"), watch("motherName"), watch("religion"), watch("community"), watch("caste"), watch("anniversary")]);
+  }, [
+    watch("fatherName"),
+    watch("motherName"),
+    watch("religion"),
+    watch("community"),
+    watch("caste"),
+    watch("anniversary"),
+  ]);
 
   return (
-    <div className="space-y-4">
-      <label className="block text-lg font-semibold">Father's Name</label>
-      <input {...register("fatherName")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+    <div className="space-y-6">
+      {/* Father's and Mother's Name */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Father's Name</label>
+          <input
+            {...register("fatherName")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Mother's Name</label>
+          <input
+            {...register("motherName")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">Mother's Name</label>
-      <input {...register("motherName")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+      {/* Religion and Community */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Religion</label>
+          <select
+            {...register("religion")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {religions.map((religion) => (
+              <option key={religion.id} value={religion.name}>
+                {religion.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Community</label>
+          <select
+            {...register("community")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {community.map((comm) => (
+              <option key={comm.id} value={comm.name}>
+                {comm.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">Religion</label>
-      <select {...register("religion")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
-        {religions.map((religion) => (
-          <option key={religion.id} value={religion.name}>
-            {religion.name}
-          </option>
-        ))}
-      </select>
-
-      <label className="block text-lg font-semibold">Community</label>
-      <select {...register("community")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
-        {community.map((comm) => (
-          <option key={comm.id} value={comm.name}>
-            {comm.name}
-          </option>
-        ))}
-      </select>
-
-      <label className="block text-lg font-semibold">Caste</label>
-      <input {...register("caste")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
-
-      <label className="block text-lg font-semibold">Anniversary Date</label>
-      <input type="date" {...register("anniversary")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400" />
+      {/* Caste and Anniversary Date */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Caste</label>
+          <input
+            {...register("caste")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+    <label className="block text-base font-medium mb-1">Date of Anniversary</label>
+    <input
+      type="date"
+      {...register("anniversaryDate")}
+      disabled={watch("maritalStatus") === "Single"}
+      className="border p-2 text-sm rounded w-full focus:ring-2 focus:ring-blue-400 disabled:bg-gray-200"
+    />
+  </div>
+      </div>
     </div>
   );
 };

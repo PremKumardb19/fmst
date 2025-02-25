@@ -3,9 +3,19 @@ import Select from "react-select";
 import { useAddressStore } from "../../store/addressStore"; // For current address
 import { usePermanentAddressStore } from "../../store/permanentAddress"; // Separate store for permanent address
 
-const PermanentAddress: React.FC<{ sameAsCurrent:any,setSameAsCurrent:any,register: any; watch: any; setValue: any }> = ({ sameAsCurrent,register, watch, setValue }) => {
-  
+interface PermanentAddressProps {
+  sameAsCurrent: any;
+  register: any;
+  watch: any;
+  setValue: any;
+}
 
+const PermanentAddress: React.FC<PermanentAddressProps> = ({
+  sameAsCurrent,
+  register,
+  watch,
+  setValue,
+}) => {
   const {
     selectedState: currentState,
     selectedDistrict: currentDistrict,
@@ -42,19 +52,19 @@ const PermanentAddress: React.FC<{ sameAsCurrent:any,setSameAsCurrent:any,regist
     if (storedState) setPermanentState(JSON.parse(storedState));
     if (storedDistrict) setPermanentDistrict(JSON.parse(storedDistrict));
     if (storedTaluk) setPermanentTaluk(JSON.parse(storedTaluk));
-  }, []);
+  }, [fetchStates, setPermanentState, setPermanentDistrict, setPermanentTaluk, setValue]);
 
   useEffect(() => {
     if (permanentState) {
       fetchDistricts(permanentState.id);
     }
-  }, [permanentState]);
+  }, [permanentState, fetchDistricts]);
 
   useEffect(() => {
     if (permanentDistrict) {
       fetchTaluks(permanentDistrict.id);
     }
-  }, [permanentDistrict]);
+  }, [permanentDistrict, fetchTaluks]);
 
   useEffect(() => {
     if (sameAsCurrent) {
@@ -68,81 +78,142 @@ const PermanentAddress: React.FC<{ sameAsCurrent:any,setSameAsCurrent:any,regist
       const storedState = localStorage.getItem("permanentState");
       const storedDistrict = localStorage.getItem("permanentDistrict");
       const storedTaluk = localStorage.getItem("permanentTaluk");
-  
+
       if (storedAddress) setValue("permanentAddress", storedAddress);
-      if (storedState) setPermanentState(JSON.parse(storedState)); 
+      if (storedState) setPermanentState(JSON.parse(storedState));
       if (storedDistrict) setPermanentDistrict(JSON.parse(storedDistrict));
       if (storedTaluk) setPermanentTaluk(JSON.parse(storedTaluk));
-  
+
       localStorage.setItem("sameAsCurrent", "false");
     }
-  }, [sameAsCurrent, currentAddress, currentState, currentDistrict, currentTaluk, setValue]);
-  
-    
+  }, [
+    sameAsCurrent,
+    currentAddress,
+    currentState,
+    currentDistrict,
+    currentTaluk,
+    setPermanentState,
+    setPermanentDistrict,
+    setPermanentTaluk,
+    setValue,
+  ]);
+
   useEffect(() => {
     localStorage.setItem("permanentAddress", watch("permanentAddress") || "");
   }, [watch("permanentAddress")]);
 
   useEffect(() => {
-    if (permanentState) localStorage.setItem("permanentState", JSON.stringify(permanentState));
+    if (permanentState)
+      localStorage.setItem("permanentState", JSON.stringify(permanentState));
   }, [permanentState]);
 
   useEffect(() => {
-    if (permanentDistrict) localStorage.setItem("permanentDistrict", JSON.stringify(permanentDistrict));
+    if (permanentDistrict)
+      localStorage.setItem("permanentDistrict", JSON.stringify(permanentDistrict));
   }, [permanentDistrict]);
 
   useEffect(() => {
-    if (permanentTaluk) localStorage.setItem("permanentTaluk", JSON.stringify(permanentTaluk));
+    if (permanentTaluk)
+      localStorage.setItem("permanentTaluk", JSON.stringify(permanentTaluk));
   }, [permanentTaluk]);
 
   return (
-    <div className="space-y-4">
-      
-      <label className="block text-lg font-semibold">Permanent Address</label>
-      <textarea
-        {...register("permanentAddress")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        disabled={sameAsCurrent}
-      ></textarea>
+    <div className="space-y-6">
+      {/* Permanent Address */}
+      <div>
+        <label className="block text-base font-medium mb-1">
+          Permanent Address
+        </label>
+        <textarea
+          {...register("permanentAddress")}
+          className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          disabled={sameAsCurrent}
+        ></textarea>
+      </div>
 
-      <label className="block text-lg font-semibold">Country</label>
-      <select
-        {...register("permanentCountry")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        disabled={sameAsCurrent}
-      >
-        <option value="India">India</option>
-      </select>
+      {/* Country and State */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Country</label>
+          <select
+            {...register("permanentCountry")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+            disabled={sameAsCurrent}
+          >
+            <option value="India">India</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">State</label>
+          <Select
+            options={states.map((state) => ({
+              value: state.id,
+              label: state.name,
+            }))}
+            value={
+              permanentState
+                ? { value: permanentState.id, label: permanentState.name }
+                : null
+            }
+            onChange={(selected) =>
+              setPermanentState(
+                selected ? { id: selected.value, name: selected.label } : null
+              )
+            }
+            placeholder="Select State"
+            isClearable
+            isDisabled={sameAsCurrent}
+          />
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">State</label>
-      <Select
-        options={states.map((state) => ({ value: state.id, label: state.name }))}
-        value={permanentState ? { value: permanentState.id, label: permanentState.name } : null}
-        onChange={(selected) => setPermanentState(selected ? { id: selected.value, name: selected.label } : null)}
-        placeholder="Select State"
-        isClearable
-        isDisabled={sameAsCurrent}
-      />
-
-      <label className="block text-lg font-semibold">District</label>
-      <Select
-        options={districts.map((district) => ({ value: district.id, label: district.name }))}
-        value={permanentDistrict ? { value: permanentDistrict.id, label: permanentDistrict.name } : null}
-        onChange={(selected) => setPermanentDistrict(selected ? { id: selected.value, name: selected.label } : null)}
-        placeholder="Select District"
-        isDisabled={!permanentState || sameAsCurrent}
-        isClearable
-      />
-
-      <label className="block text-lg font-semibold">Taluk</label>
-      <Select
-        options={taluks.map((taluk) => ({ value: taluk.id, label: taluk.name }))}
-        value={permanentTaluk ? { value: permanentTaluk.id, label: permanentTaluk.name } : null}
-        onChange={(selected) => setPermanentTaluk(selected ? { id: selected.value, name: selected.label } : null)}
-        placeholder="Select Taluk"
-        isDisabled={!permanentDistrict || sameAsCurrent}
-        isClearable
-      />
+      {/* District and Taluk */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">District</label>
+          <Select
+            options={districts.map((district) => ({
+              value: district.id,
+              label: district.name,
+            }))}
+            value={
+              permanentDistrict
+                ? { value: permanentDistrict.id, label: permanentDistrict.name }
+                : null
+            }
+            onChange={(selected) =>
+              setPermanentDistrict(
+                selected ? { id: selected.value, name: selected.label } : null
+              )
+            }
+            placeholder="Select District"
+            isDisabled={!permanentState || sameAsCurrent}
+            isClearable
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Taluk</label>
+          <Select
+            options={taluks.map((taluk) => ({
+              value: taluk.id,
+              label: taluk.name,
+            }))}
+            value={
+              permanentTaluk
+                ? { value: permanentTaluk.id, label: permanentTaluk.name }
+                : null
+            }
+            onChange={(selected) =>
+              setPermanentTaluk(
+                selected ? { id: selected.value, name: selected.label } : null
+              )
+            }
+            placeholder="Select Taluk"
+            isDisabled={!permanentDistrict || sameAsCurrent}
+            isClearable
+          />
+        </div>
+      </div>
     </div>
   );
 };
