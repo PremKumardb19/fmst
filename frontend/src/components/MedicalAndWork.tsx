@@ -5,14 +5,13 @@ const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = (
   const { bloodGroups, fetchBloodGroups, rehydrateState } = useBloodGroupStore();
 
   useEffect(() => {
-    rehydrateState(); 
+    rehydrateState();
   }, [rehydrateState]);
 
   useEffect(() => {
     if (bloodGroups.length === 0) {
-      fetchBloodGroups(); 
+      fetchBloodGroups();
     }
-
     const storedBloodGroup = localStorage.getItem("bloodGroup");
     if (storedBloodGroup) {
       setValue("bloodGroup", storedBloodGroup);
@@ -25,16 +24,15 @@ const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = (
         localStorage.setItem("bloodGroup", value.bloodGroup);
       }
     });
-
-    return () => subscription.unsubscribe(); 
+    return () => subscription.unsubscribe();
   }, [watch]);
 
   return (
-    <div className="space-y-4">
-      <label className="block text-lg font-semibold">Blood Group</label>
+    <div className="space-y-6">
+      <label className="block text-base font-medium mb-1">Blood Group</label>
       <select
         {...register("bloodGroup")}
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+        className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
       >
         {bloodGroups.length > 0 ? (
           bloodGroups.map((group) => (
@@ -43,7 +41,7 @@ const MedicalAndWork: React.FC<{ register: any; setValue: any; watch: any }> = (
             </option>
           ))
         ) : (
-          <option value="A+">A+</option> 
+          <option value="A+">A+</option>
         )}
       </select>
     </div>

@@ -6,11 +6,18 @@ const DesignationDetails: React.FC<{ register: any; setValue: any; watch: any }>
   setValue,
   watch,
 }) => {
-  const { designations, employmentTypes, fetchDesignations, fetchEmploymentTypes, details, setDetails, rehydrateState } =
-    useDesignationStore();
+  const {
+    designations,
+    employmentTypes,
+    fetchDesignations,
+    fetchEmploymentTypes,
+    details,
+    setDetails,
+    rehydrateState,
+  } = useDesignationStore();
 
   useEffect(() => {
-    rehydrateState(); 
+    rehydrateState();
     if (designations.length === 0) fetchDesignations();
     if (employmentTypes.length === 0) fetchEmploymentTypes();
   }, [fetchDesignations, fetchEmploymentTypes, rehydrateState, designations.length, employmentTypes.length]);
@@ -21,7 +28,7 @@ const DesignationDetails: React.FC<{ register: any; setValue: any; watch: any }>
         setValue(key, details[key as keyof typeof details]);
       }
     });
-  }, []); // ✅ Runs only once to prevent infinite loop
+  }, []); // Runs only once
 
   useEffect(() => {
     const subscription = watch((value: any) => {
@@ -34,64 +41,88 @@ const DesignationDetails: React.FC<{ register: any; setValue: any; watch: any }>
   }, [watch, setDetails, details]);
 
   return (
-    <div className="space-y-4">
-      <label className="block text-lg font-semibold">Designation</label>
-      <select {...register("designation")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
-        {designations.length > 0 ? (
-          designations.map((designation) => (
-            <option key={designation.id} value={designation.name}>
-              {designation.name}
-            </option>
-          ))
-        ) : (
-          <option value="Professor">Professor</option>
-        )}
-      </select>
+    <div className="space-y-6">
+      {/* Designation & Employment Type */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Designation</label>
+          <select
+            {...register("designation")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {designations.length > 0 ? (
+              designations.map((designation) => (
+                <option key={designation.id} value={designation.name}>
+                  {designation.name}
+                </option>
+              ))
+            ) : (
+              <option value="Professor">Professor</option>
+            )}
+          </select>
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Employment Type</label>
+          <select
+            {...register("employment_type")}
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            {employmentTypes.length > 0 ? (
+              employmentTypes.map((type) => (
+                <option key={type.id} value={type.type_name}>
+                  {type.type_name}
+                </option>
+              ))
+            ) : (
+              <option value="Full-Time">Full-Time</option>
+            )}
+          </select>
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">Employment Type</label>
-      <select {...register("employment_type")} className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400">
-        {employmentTypes.length > 0 ? (
-          employmentTypes.map((type) => (
-            <option key={type.id} value={type.type_name}>
-              {type.type_name}
-            </option>
-          ))
-        ) : (
-          <option value="Full-Time">Full-Time</option>
-        )}
-      </select>
+      {/* Employment Number & PAN */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Employment Number</label>
+          <input
+            {...register("employment_number")}
+            type="text"
+            placeholder="Enter Employment Number"
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">PAN</label>
+          <input
+            {...register("pan")}
+            type="text"
+            placeholder="Enter PAN Number"
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
 
-      <label className="block text-lg font-semibold">Employment Number</label>
-      <input
-        {...register("employment_number")}
-        type="text"
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        placeholder="Enter Employment Number"
-      />
-
-      <label className="block text-lg font-semibold">PAN</label>
-      <input
-        {...register("pan")}
-        type="text"
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        placeholder="Enter PAN Number"
-      />
-
-      <label className="block text-lg font-semibold">Aadhar</label>
-      <input
-        {...register("aadhar")}
-        type="text"
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        placeholder="Enter Aadhar Number"
-      />
-
-      <label className="block text-lg font-semibold">Passport Number</label>
-      <input
-        {...register("passport_number")}
-        type="text"
-        className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-400"
-        placeholder="Enter Passport Number"
-      />
+      {/* Aadhar & Passport Number */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-base font-medium mb-1">Aadhar</label>
+          <input
+            {...register("aadhar")}
+            type="text"
+            placeholder="Enter Aadhar Number"
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div>
+          <label className="block text-base font-medium mb-1">Passport Number</label>
+          <input
+            {...register("passport_number")}
+            type="text"
+            placeholder="Enter Passport Number"
+            className="border p-2 text-sm rounded w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
     </div>
   );
 };
