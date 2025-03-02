@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  User,
   FileText
 } from "lucide-react";
 import ProfileForm from "./ProfilePage";
@@ -80,6 +81,7 @@ const HomePage: React.FC = () => {
   const navItems = [
     { icon: <LayoutDashboard className="w-5 h-5" />, label: "Dashboard", id: 'dashboard' },
     { icon: <UserCircle className="w-5 h-5" />, label: "Profile", id: 'profile' },
+    { icon: <User className="w-5 h-5" />, label: "Relationships", id:'relationships' },
     { icon: <GraduationCap className="w-5 h-5" />, label: "Education", id: 'education' },
     { icon: <ScrollText className="w-5 h-5" />, label: "Journal", id: 'journal' },
     { icon: <BookOpen className="w-5 h-5" />, label: "Publications", id: 'publications' },
@@ -118,7 +120,7 @@ const HomePage: React.FC = () => {
             <ProfileForm />
           </div>
         );
-        case 'journal':
+        case 'relationships':
           if (isLoading) {
             return (
               <div className="flex justify-center items-center p-16">

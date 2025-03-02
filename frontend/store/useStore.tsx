@@ -1,5 +1,5 @@
 import { create } from "zustand";
-
+import axios from "axios";
 type Relationship = {
   id: number;
   user_id: number;
@@ -31,33 +31,26 @@ export const useStore = create<State>((set) => ({
   
       console.log("Fetching relationships for user:", user_id);
   
-      const res = await fetch(`http://localhost:5000/api/relationships/${user_id}`);
-      if (!res.ok) throw new Error(`Failed to fetch relationships - Status: ${res.status}`);
-  
-      const data = await res.json();
-      set({ relationships: data });
-      console.log("Fetched relationships:", data);
+      const res = await axios.get(`http://localhost:5000/api/relationships/${user_id}`);
+    
+      set({ relationships: res.data }); // Axios automatically parses JSON
+      console.log("Fetched relationships:", res.data);
     } catch (error) {
       console.error("Error fetching relationships:", error);
     }
   },
-  
+
 
   addRelationship: async (data) => {
     try {
       console.log("Adding relationship:", data);
-      const res = await fetch("http://localhost:5000/api/relationships", {
-        method: "POST",
+      
+      const res = await axios.post("http://localhost:5000/api/relationships", data, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to add relationship");
-      }
+      const newRelationship = res.data; // Axios automatically parses JSON
 
-      const newRelationship = await res.json();
       set((state) => ({
         relationships: [...state.relationships, { id: newRelationship.id, ...data }],
       }));
@@ -66,33 +59,30 @@ export const useStore = create<State>((set) => ({
     } catch (error) {
       console.error("Error adding relationship:", error);
     }
-  },
+},
 
-  updateRelationship: async (id, data) => {
-    try {
-      console.log("Updating relationship:", id, data);
-      const res = await fetch(`http://localhost:5000/api/relationships/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+updateRelationship: async (id, data) => {
+  try {
+    console.log("Updating relationship:", id, data);
+    
+    const res = await axios.put(`http://localhost:5000/api/relationships/${id}`, data, {
+      headers: { "Content-Type": "application/json" },
+    });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to update relationship");
-      }
+    const updatedRelationship = res.data; // Axios automatically parses JSON
 
-      set((state) => ({
-        relationships: state.relationships.map((rel) =>
-          rel.id === id ? { ...rel, ...data } : rel
-        ),
-      }));
+    set((state) => ({
+      relationships: state.relationships.map((rel) =>
+        rel.id === id ? { ...rel, ...updatedRelationship } : rel
+      ),
+    }));
 
-      console.log("Relationship updated successfully");
-    } catch (error) {
-      console.error("Error updating relationship:", error);
-    }
-  },
+    console.log("Relationship updated successfully:", updatedRelationship);
+  } catch (error) {
+    console.error("Error updating relationship:", error);
+  }
+},
+
 
   deleteRelationship: async (id) => {
     try {

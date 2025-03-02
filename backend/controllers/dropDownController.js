@@ -224,8 +224,8 @@ const createRelationship = async (req, res, db) => {
 };
 
 const getRelationshipsByUserId = async (req, res, db) => {
-  const user_id = parseInt(req.params.user_id);
-
+  const {user_id }=req.body;
+  console.log(user_id)
   if (!user_id) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
