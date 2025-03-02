@@ -25,7 +25,7 @@
         console.log("Fetching relationships for user:", user_id);
         fetchRelationships(user_id);
       }
-    }, [user_id,fetchRelationships,setEditData,setIsConfirmingDelete]);
+    }, [user_id,fetchRelationships,setEditData,setIsConfirmingDelete,relationships]);
 
     const handleDelete = (id: number) => {
       if (isConfirmingDelete === id) {
