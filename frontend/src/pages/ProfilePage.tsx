@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, ChevronLeft, ChevronRight, Save } from "lucide-react";
@@ -18,6 +18,23 @@ const ProfileForm: React.FC = () => {
   const [sameAsCurrent, setSameAsCurrent] = useState(() => 
     JSON.parse(localStorage.getItem("sameAsCurrent") || "false")
   );
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the screen is mobile size
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   // Form Sections Configuration
   const sections: FormSection[] = [
@@ -63,8 +80,13 @@ const ProfileForm: React.FC = () => {
   ];
 
   // Computed Values
-  const progressPercentage = Math.min(((step + 2) / sections.length) * 100, 100);
-  const isLastStep = step >= sections.length - 2;
+  const progressPercentage = isMobile 
+    ? Math.min(((step + 1) / sections.length) * 100, 100)
+    : Math.min(((step + 2) / sections.length) * 100, 100);
+    
+  const isLastStep = isMobile 
+    ? step >= sections.length - 1
+    : step >= sections.length - 2;
 
   // Event Handlers
   const handleStepChange = (newStep: number) => {
@@ -86,27 +108,31 @@ const ProfileForm: React.FC = () => {
         <span className="font-medium">{Math.round(progressPercentage)}%</span>
       </div>
       <div className="flex space-x-2">
-        {sections.map((_section, index) => (
-          <motion.div
-            key={index}
-            className={`w-2 h-2 rounded-full ${
-              visitedSteps.includes(Math.floor(index / 2) * 2) 
-                ? "bg-indigo-600" 
-                : "bg-gray-200"
-            }`}
-            initial={false}
-            animate={{ scale: index === step || index === step + 1 ? 1.2 : 1 }}
-          />
-        ))}
+        {sections.map((_section, index) => {
+          const stepIndex = isMobile ? index : Math.floor(index / 2) * 2;
+          return (
+            <motion.div
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                visitedSteps.includes(stepIndex) 
+                  ? "bg-indigo-600" 
+                  : "bg-gray-200"
+              }`}
+              initial={false}
+              animate={{ scale: index === step || (!isMobile && index === step + 1) ? 1.2 : 1 }}
+            />
+          );
+        })}
       </div>
     </div>
   );
 
   const NavigationTabs = () => (
-    <div className="flex overflow-x-auto px-6 pb-4 hide-scrollbar">
+    <div className="md:px-6 md:pb-4 md:flex md:justify-start md:space-x-2">
+    <div className="flex overflow-x-auto scrollbar-hide py-2 mx-0  px-3 md:mx-0 md:px-0 md:pb-4 w-screen md:w-auto">
       {sections.map((section, index) => {
         const Icon = section.icon;
-        const sectionStep = Math.floor(index / 2) * 2;
+        const sectionStep = isMobile ? index : Math.floor(index / 2) * 2;
         const isVisited = visitedSteps.includes(sectionStep);
         const isCurrent = sectionStep === step;
         
@@ -115,25 +141,26 @@ const ProfileForm: React.FC = () => {
             key={index}
             type="button"
             onClick={() => handleStepChange(sectionStep)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg mr-2 transition-all ${
+            className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg mr-2 transition-all ${
               isCurrent
                 ? "bg-indigo-600 text-white shadow-lg"
                 : isVisited
                 ? "text-indigo-600 bg-indigo-50 hover:bg-indigo-100"
                 : "text-gray-400 hover:bg-gray-50 cursor-not-allowed"
             }`}
-            disabled={!isVisited && sectionStep !== step + 2}
+            disabled={!isVisited && sectionStep !== (isMobile ? step + 1 : step + 2)}
           >
-            <Icon className="w-5 h-5" />
-            <span className="whitespace-nowrap font-medium">{section.label}</span>
+            <Icon className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="whitespace-nowrap text-sm md:text-base font-medium">{section.label}</span>
             {isVisited && (
               <CheckCircle 
-                className={`w-4 h-4 ${isCurrent ? "text-white" : "text-green-500"} ml-1`} 
+                className={`w-3 h-3 md:w-4 md:h-4 ${isCurrent ? "text-white" : "text-green-500"} ml-1`} 
               />
             )}
           </button>
         );
       })}
+    </div>
     </div>
   );
 
@@ -141,24 +168,24 @@ const ProfileForm: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8"
-    >
+      className="h-[100%] w-[96.8%] md:w-full mx-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 md:p-0.5"
+      >
       <motion.form
-        initial={{ y: 20 }}
+        initial={{ y: 20 }} 
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
+        className="max-w-7xl mx-auto bg-white rounded-xl md:rounded-2xl shadow-xl overflow-hidden border border-gray-100"
       >
         {/* Header */}
-        <header className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 md:p-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Complete Your Profile</h1>
-          <p className="text-indigo-100 mt-2">Please fill in all the required information</p>
+        <header className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 md:p-8">
+          <h1 className="text-xl md:text-3xl font-bold text-white">Complete Your Profile</h1>
+          <p className="text-indigo-100 mt-1 md:mt-2 text-sm md:text-base">Please fill in all the required information</p>
         </header>
 
         {/* Navigation & Progress */}
         <nav className="border-b border-gray-100 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
-          <div className="px-6 py-4">
+          <div className="px-4 md:px-6 py-4 md:py-6">
             <ProgressIndicator />
             <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
               <motion.div
@@ -173,7 +200,7 @@ const ProfileForm: React.FC = () => {
         </nav>
 
         {/* Form Content */}
-        <main className="p-6 md:p-8">
+        <main className="p-4 md:p-6 overflow-x-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -182,22 +209,22 @@ const ProfileForm: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
               className={`grid grid-cols-1 ${
-                isLastStep ? "md:grid-cols-1" : "md:grid-cols-2"
-              } gap-8`}
+                !isMobile && !isLastStep ? "md:grid-cols-2" : "md:grid-cols-1"
+              } gap-6 md:gap-8`}
             >
               {sections[step].component}
-              {sections[step + 1] && sections[step + 1].component}
+              {!isMobile && sections[step + 1] && sections[step + 1].component}
             </motion.div>
           </AnimatePresence>
         </main>
 
         {/* Navigation Buttons */}
-        <footer className="border-t border-gray-100 p-6 md:p-8 bg-gray-50">
+        <footer className="border-t border-gray-100 p-4 md:p-8 bg-gray-50">
           <div className="flex justify-between items-center">
             <motion.button
               type="button"
-              onClick={() => handleStepChange(step - 2)}
-              className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
+              onClick={() => handleStepChange(step - (isMobile ? 1 : 2))}
+              className={`flex items-center space-x-1 md:space-x-2 px-4 md:px-6 py-2 md:py-3 rounded-lg text-sm md:text-base font-medium transition-all ${
                 step > 0
                   ? "bg-white text-gray-700 shadow-md hover:shadow-lg"
                   : "opacity-0 pointer-events-none"
@@ -205,14 +232,14 @@ const ProfileForm: React.FC = () => {
               initial={false}
               animate={{ opacity: step > 0 ? 1 : 0 }}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
               <span>Previous</span>
             </motion.button>
 
             <motion.button
               type={isLastStep ? "submit" : "button"}
-              onClick={() => !isLastStep && handleStepChange(step + 2)}
-              className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium text-white shadow-md hover:shadow-lg transition-all"
+              onClick={() => !isLastStep && handleStepChange(step + (isMobile ? 1 : 2))}
+              className="flex items-center space-x-1 md:space-x-2 px-4 md:px-6 py-2 md:py-3 rounded-lg text-sm md:text-base font-medium text-white shadow-md hover:shadow-lg transition-all"
               style={{
                 background: isLastStep
                   ? "linear-gradient(to right, #059669, #10b981)"
@@ -223,9 +250,9 @@ const ProfileForm: React.FC = () => {
             >
               <span>{isLastStep ? "Save Profile" : "Next"}</span>
               {isLastStep ? (
-                <Save className="w-5 h-5" />
+                <Save className="w-4 h-4 md:w-5 md:h-5" />
               ) : (
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               )}
             </motion.button>
           </div>

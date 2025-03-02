@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getSalutations, getGenders, getMaritalStatuses,getReligion,getBloodGroup,getDesignation,getStates,getDistricts,getTaluks,getCommunity,getAccountTypes,getEmploymentType} = require("../controllers/dropDownController");
+const { getSalutations, getGenders, getMaritalStatuses,getReligion,getBloodGroup,getDesignation,getStates,getDistricts,getTaluks,getCommunity,getAccountTypes,getEmploymentType,getFacultyDetails} = require("../controllers/dropDownController");
 
 function dropDownRoutes(db) {
   router.get("/salutations", (req, res) => getSalutations(req,res,db));
@@ -15,6 +15,7 @@ router.get("/districts/:stateId", (req, res) =>getDistricts(req,res,db));
 router.get("/taluks/:districtId",(req, res) =>getTaluks(req,res,db));
   router.get("/account-types", (req, res) => getAccountTypes(req,res,db));
   router.get("/employment-types", (req, res) => getEmploymentType(req,res,db));
+  router.get("/faculty-details/:userId", (req, res) => getFacultyDetails(req,res,db));
   return router;
 }
 
