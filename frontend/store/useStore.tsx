@@ -20,13 +20,20 @@ type State = {
 
 export const useStore = create<State>((set) => ({
   relationships: [],
+  
 
   fetchRelationships: async (user_id) => {
     try {
+      if (!user_id || isNaN(user_id)) {
+        console.error("Invalid user_id provided:", user_id);
+        return;
+      }
+  
       console.log("Fetching relationships for user:", user_id);
+  
       const res = await fetch(`http://localhost:5000/api/relationships/${user_id}`);
-      if (!res.ok) throw new Error("Failed to fetch relationships");
-
+      if (!res.ok) throw new Error(`Failed to fetch relationships - Status: ${res.status}`);
+  
       const data = await res.json();
       set({ relationships: data });
       console.log("Fetched relationships:", data);
@@ -34,6 +41,7 @@ export const useStore = create<State>((set) => ({
       console.error("Error fetching relationships:", error);
     }
   },
+  
 
   addRelationship: async (data) => {
     try {
@@ -104,4 +112,4 @@ export const useStore = create<State>((set) => ({
       console.error("Error deleting relationship:", error);
     }
   },
-}));
+}));  
