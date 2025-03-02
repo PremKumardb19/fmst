@@ -30,11 +30,6 @@ interface DashboardCardProps {
   icon: React.ReactNode;
 }
 
-
-
-// Faculty Details Display Component
-
-
 const HomePage: React.FC = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -251,7 +246,7 @@ const HomePage: React.FC = () => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="lg:hidden fixed top-4 right-4 z-50 p-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg text-white hover:shadow-xl transition-all duration-300"
+        className="lg:hidden fixed top-8 right-4 z-50 p-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg text-white hover:shadow-xl transition-all duration-300"
         aria-label="Toggle menu"
       >
         {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -276,7 +271,6 @@ const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 p-4 sm:p-6 overflow-y-auto">
             <div className="space-y-2 sm:space-y-3">
               {navItems.map((item) => (
@@ -313,16 +307,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </aside>
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-white shadow-md p-4 sm:p-6 lg:p-8 border-b border-gray-100">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent truncate">Welcome, {user?.name || "Faculty User"}</h1>
-            <p className="text-gray-500 mt-2 text-sm sm:text-base">Manage your academic profile, publications, and research activities</p>
-          </div>
-        </header>
-
         <main className="flex-1 bg-gray-50 p-2 sm:p-6 overflow-x-hidden">
           <div className="max-w-7xl mx-auto">
             {renderComponent()}
@@ -332,7 +317,7 @@ const HomePage: React.FC = () => {
 
         <footer className="bg-white p-4 sm:p-6 text-center border-t border-gray-100">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-gray-500 text-xs sm:text-sm">© {new Date().getFullYear()} Faculty Management System. All rights reserved.</p>
+            <p className="text-gray-500 text-xs sm:text-sm">© {new Date().getFullYear()} KishoreKumar_Shyam_Prem NEC. All rights reserved.</p>
             <div className="flex space-x-4 mt-4 sm:mt-0 text-xs sm:text-sm">
               <a href="#" className="text-indigo-600 hover:text-indigo-800 transition-colors">Privacy Policy</a>
               <a href="#" className="text-indigo-600 hover:text-indigo-800 transition-colors">Terms of Service</a>
@@ -341,8 +326,6 @@ const HomePage: React.FC = () => {
           </div>
         </footer>
       </div>
-
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden backdrop-blur-sm"

@@ -19,13 +19,12 @@
     const { relationships, fetchRelationships, deleteRelationship } = useStore();
     const [editData, setEditData] = useState<Relationship | null>(null);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState<number | null>(null);
-
     useEffect(() => {
-      if (user_id) {
+      if (user_id && !relationships.some(rel => rel.user_id === user_id)) {
         console.log("Fetching relationships for user:", user_id);
         fetchRelationships(user_id);
       }
-    }, [user_id,fetchRelationships,setEditData,setIsConfirmingDelete,relationships]);
+    }, [user_id]);
 
     const handleDelete = (id: number) => {
       if (isConfirmingDelete === id) {
@@ -47,17 +46,18 @@
     return (
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="p-6 sm:p-8 bg-gradient-to-r from-blue-500 to-indigo-600">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Users className="h-8 w-8 text-white" />
-                <h2 className="text-2xl font-bold text-white">Relationships</h2>
-              </div>
-              <div className="text-sm text-blue-100">
-                {relationships.length} {relationships.length === 1 ? 'person' : 'people'} in your network
-              </div>
-            </div>
-          </div>
+        <div className="p-6 sm:p-8 bg-gradient-to-r from-blue-500 to-indigo-600">
+  <div className="flex flex-wrap items-center justify-between sm:flex-col sm:items-start">
+    <div className="flex items-center space-x-3">
+      <Users className="h-8 w-8 text-white" />
+      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">Relationships</h2>
+    </div>
+    <div className="text-sm sm:text-base text-blue-100 mt-2 sm:mt-0">
+      {relationships.length} {relationships.length === 1 ? 'person' : 'people'} in your network
+    </div>
+  </div>
+</div>
+
 
           <div className="p-6 sm:p-8 bg-gray-50 border-b border-gray-200">
             <RelationshipForm 

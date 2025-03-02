@@ -224,14 +224,14 @@ const createRelationship = async (req, res, db) => {
 };
 
 const getRelationshipsByUserId = async (req, res, db) => {
-  const {user_id }=req.body;
-  console.log(user_id)
-  if (!user_id) {
+  const {userId }=req.params;
+  console.log(req.params)
+  if (!userId) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
 
   try {
-    const [results] = await db.execute('SELECT * FROM relationship_details WHERE user_id = ?', [user_id]);
+    const [results] = await db.execute('SELECT * FROM relationship_details WHERE user_id = ?', [userId]);
     res.json(results);
   } catch (error) {
     console.error('Database error:', error);

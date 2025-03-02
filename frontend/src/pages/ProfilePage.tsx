@@ -129,19 +129,19 @@ const ProfileForm: React.FC = () => {
 
   const NavigationTabs = () => (
     <div className="md:px-6 md:pb-4 md:flex md:justify-start md:space-x-2">
-    <div className="flex overflow-x-auto scrollbar-hide py-2 mx-0  px-3 md:mx-0 md:px-0 md:pb-4 w-screen md:w-auto">
+    <div className="flex overflow-x-auto scrollbar-hide py-2 px-3 md:px-0 md:pb-4 w-full md:w-auto space-x-2">
       {sections.map((section, index) => {
         const Icon = section.icon;
         const sectionStep = isMobile ? index : Math.floor(index / 2) * 2;
         const isVisited = visitedSteps.includes(sectionStep);
         const isCurrent = sectionStep === step;
-        
+  
         return (
           <button
             key={index}
             type="button"
             onClick={() => handleStepChange(sectionStep)}
-            className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg mr-2 transition-all ${
+            className={`flex-shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
               isCurrent
                 ? "bg-indigo-600 text-white shadow-lg"
                 : isVisited
@@ -161,14 +161,15 @@ const ProfileForm: React.FC = () => {
         );
       })}
     </div>
-    </div>
+  </div>
+  
   );
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="h-[100%] w-[96.8%] md:w-full mx-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 md:p-0.5"
+      className=" bg-gradient-to-br from-indigo-50 via-white to-purple-50 md:p-0.5"
       >
       <motion.form
         initial={{ y: 20 }} 
@@ -185,19 +186,22 @@ const ProfileForm: React.FC = () => {
 
         {/* Navigation & Progress */}
         <nav className="border-b border-gray-100 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
-          <div className="px-4 md:px-6 py-4 md:py-6">
-            <ProgressIndicator />
-            <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-indigo-600 to-purple-600"
-                initial={{ width: "0%" }}
-                animate={{ width: `${progressPercentage}%` }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-          </div>
-          <NavigationTabs />
-        </nav>
+  <div className="px-3 sm:px-4 md:px-6 py-3 md:py-5">
+    <ProgressIndicator />
+    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+      <motion.div
+        className="h-full bg-gradient-to-r from-indigo-600 to-purple-600"
+        initial={{ width: "0%" }}
+        animate={{ width: `${progressPercentage}%` }}
+        transition={{ duration: 0.3 }}
+      />
+    </div>
+  </div>
+  <div className="overflow-x-auto whitespace-nowrap">
+    <NavigationTabs />
+  </div>
+</nav>
+
 
         {/* Form Content */}
         <main className="p-4 md:p-6 overflow-x-hidden">
