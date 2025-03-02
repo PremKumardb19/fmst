@@ -1,5 +1,5 @@
-﻿# fmst
-Contibutors 
-Kishore Kumar J
-Shyam Shunmugam G
-Prem Kumar B
+# FMST
+## Contributors:
+- Kishore Kumar J  
+- Shyam Shunmugam G  
+- Prem Kumar B  
