@@ -194,6 +194,88 @@ async function enrichFacultyData(facultyData,db) {
 }
 
 
+const createRelationship = async (req, res, db) => {
+  const { user_id, name, relation, age, occupation, income } = req.body;
+  console.log("Sending request:", JSON.stringify({ user_id, name, relation, age, occupation, income }));
+
+  if (
+    !user_id || 
+    !name || 
+    !relation || 
+    age === undefined || 
+    income === undefined || 
+    !occupation
+  ) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+  
+
+  try {
+    const [result] = await db.execute(
+      'INSERT INTO relationship_details (user_id, name, relation, age, occupation, income) VALUES (?, ?, ?, ?, ?, ?)',
+      [user_id, name, relation, age, occupation, income]
+    );
+    res.json({ message: 'Relationship added', id: result.insertId });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+  
+};
+
+const getRelationshipsByUserId = async (req, res, db) => {
+  const user_id = parseInt(req.params.user_id);
+
+  if (!user_id) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  try {
+    const [results] = await db.execute('SELECT * FROM relationship_details WHERE user_id = ?', [user_id]);
+    res.json(results);
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const updateRelationship = async (req, res, db) => {
+  const { id } = req.params;
+  const { name, relation, age, occupation, income } = req.body;
+
+  if (!id || !name || !relation || !age || !occupation || !income) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    await db.execute(
+      'UPDATE relationship_details SET name = ?, relation = ?, age = ?, occupation = ?, income = ? WHERE id = ?',
+      [name, relation, age, occupation, income, id]
+    );
+    res.json({ message: 'Relationship updated' });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteRelationship = async (req, res, db) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: 'Invalid relationship ID' });
+  }
+
+  try {
+    await db.execute('DELETE FROM relationship_details WHERE id = ?', [id]);
+    res.json({ message: 'Relationship deleted' });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 module.exports = { 
   getSalutations, 
   getGenders, 
@@ -207,5 +289,9 @@ module.exports = {
  getCommunity,
  getAccountTypes,
  getEmploymentType,
- getFacultyDetails
+ getFacultyDetails,
+ createRelationship,
+ getRelationshipsByUserId,
+ updateRelationship,
+ deleteRelationship
 };

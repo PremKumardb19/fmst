@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import ProfileForm from "./ProfilePage";
 import { useAuthStore } from "../../store/useAuthStore";
+import RelationShipPage from './RelationshipPage';
 
 interface FacultyData {
   [key: string]: string | number | null | undefined;
@@ -281,7 +282,22 @@ const HomePage: React.FC = () => {
             <ProfileForm />
           </div>
         );
-        
+        case 'journal':
+          if (isLoading) {
+            return (
+              <div className="flex justify-center items-center p-16">
+                <div className="relative">
+                  <div className="w-20 h-20 border-purple-200 border-4 rounded-full"></div>
+                  <div className="w-20 h-20 border-indigo-600 border-t-4 animate-spin rounded-full absolute top-0 left-0"></div>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="px-2 py-4 sm:px-6 lg:px-8">
+              <RelationShipPage/>
+            </div>
+          );
       case 'dashboard':
         return (
           <div className="px-2 py-4 sm:px-6 lg:px-8">
@@ -472,6 +488,7 @@ const HomePage: React.FC = () => {
         <main className="flex-1 bg-gray-50 p-2 sm:p-6 overflow-x-hidden">
           <div className="max-w-7xl mx-auto">
             {renderComponent()}
+            
           </div>
         </main>
 
