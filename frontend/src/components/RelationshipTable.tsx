@@ -20,11 +20,10 @@
     const [editData, setEditData] = useState<Relationship | null>(null);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState<number | null>(null);
     useEffect(() => {
-      if (user_id && !relationships.some(rel => rel.user_id === user_id)) {
         console.log("Fetching relationships for user:", user_id);
         fetchRelationships(user_id);
-      }
-    }, [user_id]);
+      
+    }, [fetchRelationships,editData]);
 
     const handleDelete = (id: number) => {
       if (isConfirmingDelete === id) {
