@@ -22,6 +22,7 @@ import {
 import ProfileForm from "./ProfilePage";
 import { useAuthStore } from "../../store/useAuthStore";
 import RelationShipPage from './RelationshipPage';
+import PublicationPage from './PublicationPage';
 
 interface DashboardCardProps {
   title: string;
@@ -203,6 +204,10 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         );
+      case 'publications':
+        return (
+          <PublicationPage/>
+        )
       default:
         return (
           <div className="p-4 sm:p-8">
