@@ -64,7 +64,6 @@ const HomePage: React.FC = () => {
       setIsEditing(false); // Reset editing state
     } catch (error: any) {
       console.error('Error fetching faculty details:', error);
-      // If 404, it means faculty details don't exist yet
       if (error.response && error.response.status === 404) {
         setFacultyData(null);
       }
@@ -78,9 +77,9 @@ const HomePage: React.FC = () => {
     { icon: <UserCircle className="w-5 h-5" />, label: "Profile", id: 'profile' },
     { icon: <User className="w-5 h-5" />, label: "Relationships", id:'relationships' },
     { icon: <GraduationCap className="w-5 h-5" />, label: "Education", id: 'education' },
-    { icon: <ScrollText className="w-5 h-5" />, label: "Journal", id: 'journal' },
+    { icon: <ScrollText className="w-5 h-5" />, label: "Events", id: 'events' },
     { icon: <BookOpen className="w-5 h-5" />, label: "Publications", id: 'publications' },
-    { icon: <Settings className="w-5 h-5" />, label: "Settings", id: 'settings' }
+    { icon: <Settings className="w-5 h-5" />, label: "Projects", id: 'projects' }
   ];
 
   const renderComponent = () => {
